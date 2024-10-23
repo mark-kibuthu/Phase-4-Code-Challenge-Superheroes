@@ -1,0 +1,227 @@
+Superhero Powers API
+
+This is a Flask-based REST API for managing superheroes and their associated powers. The API allows you to create, retrieve, update, and delete superheroes and their powers, as well as link powers to specific heroes.
+Table of Contents
+
+    Project Structure
+    Features
+    Installation
+    Running the Application
+    API Endpoints
+        Heroes
+        Powers
+        Hero Powers
+    Validation
+    Technologies Used
+
+Project Structure
+
+graphql
+
+├── app/
+│   ├── __init__.py           # Initializes the app
+│   ├── models.py             # Defines the database models for Hero, Power, and HeroPower
+│   ├── routes.py             # Contains the API routes for Heroes, Powers, and HeroPowers
+├── migrations/               # Auto-generated files for database migrations (handled by Flask-Migrate)
+├── config.py                 # Configuration file for the Flask app (e.g., database URI)
+├── README.md                 # Project documentation
+├── requirements.txt          # Python dependencies required for the project
+├── run.py                    # Entry point to run the Flask app
+
+Features
+
+    CRUD operations for managing heroes and powers.
+    Validation on hero powers strength and power descriptions.
+    Ability to associate multiple powers with heroes and view them in a structured format.
+    JSON-based API responses.
+
+## Installation ##
+
+    Clone the repository:
+
+   ## bash##
+cd superheroes-api
+
+## Set up a virtual environment:##
+
+bash
+
+python3 -m venv venv
+source venv/bin/activate 
+
+## Install the required dependencies:##
+
+bash
+
+pip install -r requirements.txt
+
+Set up the environment variables in a .env file. For example:
+
+plaintext
+
+FLASK_APP=run.py
+FLASK_ENV=development
+SQLALCHEMY_DATABASE_URI=sqlite:///superheroes.db
+
+Run the migrations to set up your database:
+
+bash
+
+    flask db upgrade
+
+Running the Application
+
+To run the application, use the following command:
+
+bash
+
+flask run
+
+This will start the Flask development server, and the API will be accessible at http://127.0.0.1:5555/.
+API Endpoints
+Heroes
+
+    GET /heroes
+
+    Retrieve a list of all superheroes with their id, name, and super_name.
+
+    Response Example:
+
+    json
+
+[
+  {"id": 1, "name": "Kamala Khan", "super_name": "Ms. Marvel"},
+  {"id": 2, "name": "Doreen Green", "super_name": "Squirrel Girl"}
+]
+
+GET /heroes/
+
+Retrieve the details of a specific hero by their id, including their associated powers.
+
+Response Example:
+
+json
+
+    {
+      "id": 1,
+      "name": "Kamala Khan",
+      "super_name": "Ms. Marvel",
+      "hero_powers": [
+        {
+          "id": 1,
+          "hero_id": 1,
+          "power": {
+            "id": 2,
+            "name": "flight",
+            "description": "gives the wielder the ability to fly"
+          },
+          "power_id": 2,
+          "strength": "Strong"
+        }
+      ]
+    }
+
+Powers
+
+    GET /powers
+
+    Retrieve a list of all powers.
+
+    Response Example:
+
+    json
+
+[
+  {"id": 1, "name": "super strength", "description": "gives the wielder super-human strengths"},
+  {"id": 2, "name": "flight", "description": "gives the wielder the ability to fly"}
+]
+
+GET /powers/
+
+Retrieve the details of a specific power by its id.
+
+Response Example:
+
+json
+
+{
+  "id": 1,
+  "name": "super strength",
+  "description": "gives the wielder super-human strengths"
+}
+
+PATCH /powers/
+
+Update the description of a power by its id.
+
+Request Body:
+
+json
+
+{
+  "description": "Updated valid description"
+}
+
+Response Example:
+
+json
+
+    {
+      "id": 1,
+      "name": "super strength",
+      "description": "Updated valid description"
+    }
+
+Hero Powers
+
+    POST /hero_powers
+
+    Create a new HeroPower association between a hero and a power.
+
+    Request Body:
+
+    json
+
+{
+  "strength": "Average",
+  "power_id": 1,
+  "hero_id": 3
+}
+
+Response Example:
+
+json
+
+    {
+      "id": 11,
+      "hero_id": 3,
+      "power_id": 1,
+      "strength": "Average",
+      "hero": {
+        "id": 3,
+        "name": "Gwen Stacy",
+        "super_name": "Spider-Gwen"
+      },
+      "power": {
+        "id": 1,
+        "name": "super strength",
+        "description": "gives the wielder super-human strengths"
+      }
+    }
+
+Validation
+
+    Power Descriptions: Power descriptions must be at least 20 characters long.
+    Hero Powers Strength: The strength of a HeroPower must be one of ['Strong', 'Average', 'Weak'].
+
+Technologies Used
+
+    Flask: For building the web server and handling routing.
+    SQLAlchemy: For interacting with the database and managing models.
+    Flask-Migrate: For handling database migrations.
+    Marshmallow: For serializing and deserializing data to and from JSON.
+
+Feel free to fork this project and contribute by submitting pull requests. If you have any issues, feel free to open an issue on GitHub.
+License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
